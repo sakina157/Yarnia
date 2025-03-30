@@ -14,7 +14,7 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await fetch('http://localhost:5000/api/contact/submit', {
+        const response = await fetch('/api/contact/submit', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ const Contact = () => {
             alert('Failed to send message. Please try again.');
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Contact form error:', error);
         alert('Failed to send message. Please try again.');
     }
     console.log('Form submitted:', formData);

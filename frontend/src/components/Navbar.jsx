@@ -3,21 +3,20 @@ import { Link } from 'react-router-dom';
 import { FaSearch, FaUser, FaShoppingCart } from 'react-icons/fa';
 import { Login } from './Login';
 import UserMenu from './UserMenu';
+import CartDropdown from './CartDropdown';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 import './styles/Navbar.css';
 
 const Navbar = () => {
+  const { user, isAuthenticated } = useAuth();
+  const { getCartCount } = useCart();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
-  const handleUserIconClick = () => {
-    if (isAuthenticated) {
-      setIsUserMenuOpen(!isUserMenuOpen);
-    } else {
-      setIsLoginOpen(true);
-    }
-  };
+  const isAdmin = user?.email === process.env.REACT_APP_ADMIN_EMAIL;
+  const cartCount = getCartCount();
 
   return (
     <>
@@ -34,6 +33,7 @@ const Navbar = () => {
           <Link to="/about" className="nav-link">About Us</Link>
           <Link to="/contact" className="nav-link">Contact</Link>
           <Link to="/shop" className="nav-link">Shop</Link>
+          {isAdmin && <Link to="/admin" className="nav-link">Admin</Link>}
         </div>
         
         <div className="navbar-right">
@@ -41,17 +41,26 @@ const Navbar = () => {
             <FaSearch className="nav-icon" />
           </button>
           <div className="user-icon-container">
-            <button className="icon-button" onClick={handleUserIconClick}>
+            <button 
+              className="icon-button" 
+              onClick={() => isAuthenticated ? setIsUserMenuOpen(!isUserMenuOpen) : setIsLoginOpen(true)}
+            >
               <FaUser className="nav-icon" />
             </button>
             {isAuthenticated && isUserMenuOpen && (
               <UserMenu onClose={() => setIsUserMenuOpen(false)} />
             )}
           </div>
-          <button className="icon-button">
-            <FaShoppingCart className="nav-icon" />
-            <span className="cart-count">0</span>
-          </button>
+          <div className="cart-icon-container">
+            <button 
+              className="icon-button"
+              onClick={() => setIsCartOpen(!isCartOpen)}
+            >
+              <FaShoppingCart className="nav-icon" />
+              {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+            </button>
+            {isCartOpen && <CartDropdown onClose={() => setIsCartOpen(false)} />}
+          </div>
         </div>
       </nav>
 

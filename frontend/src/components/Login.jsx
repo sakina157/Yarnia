@@ -27,23 +27,26 @@ export const Login = ({ isOpen, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await fetch('http://localhost:5000/api/auth/login', {
+        const response = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(formData)
         });
 
         const data = await response.json();
-
-        if (data.success) {
-          login(data.user, data.token); // Use AuthContext login
-          if (isStandalone) {
-              navigate('/');
-          } else {
-              onClose();
-          }
+        
+        if (response.ok) {
+            login(data.user, data.token);
+            // Check if user is admin
+            if (data.user.email === process.env.REACT_APP_ADMIN_EMAIL) {
+                navigate('/admin');
+            } else if (isStandalone) {
+                navigate('/');
+            } else {
+                onClose();
+            }
         } else {
             alert(data.message || 'Login failed');
         }

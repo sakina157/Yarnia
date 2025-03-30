@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'; // Add useEffect
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FaUser, FaCamera, FaLock, FaTrash } from 'react-icons/fa';
 import './styles/UserProfile.css';
@@ -7,11 +7,12 @@ import './styles/UserProfile.css';
 const UserProfile = () => {
     const { user, isAuthenticated, loading, error, updateUserProfile, changePassword, deleteAccount } = useAuth();
     const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState('profile');
+    const location = useLocation();
+    const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'profile');
     const [profileData, setProfileData] = useState({
         name: user?.name || '',
         email: user?.email || '',
-        phone: user?.phone || '',
+        phone: user?.phone || ''
     });
     const [passwordData, setPasswordData] = useState({
         currentPassword: '',
@@ -23,8 +24,17 @@ const UserProfile = () => {
     useEffect(() => {
         if (!isAuthenticated && !loading) {
             navigate('/login');
+            return;
         }
-    }, [isAuthenticated, loading, navigate]);
+        
+        if (user) {
+            setProfileData({
+                name: user.name || '',
+                email: user.email || '',
+                phone: user.phone || ''
+            });
+        }
+    }, [isAuthenticated, loading, navigate, user]);
 
     // If not authenticated, don't render anything (will redirect)
     if (!isAuthenticated) return null;
@@ -32,9 +42,13 @@ const UserProfile = () => {
     const handleProfileUpdate = async (e) => {
         e.preventDefault();
         try {
-            await updateUserProfile(profileData);
-            setIsEditing(false);
+            const updatedUser = await updateUserProfile(profileData);
+            if (updatedUser) {
+                setIsEditing(false);
+                alert('Profile updated successfully');
+            }
         } catch (err) {
+            alert(err.message || 'Failed to update profile');
             console.error('Failed to update profile:', err);
         }
     };
@@ -46,10 +60,20 @@ const UserProfile = () => {
             return;
         }
         try {
-            await changePassword(passwordData.currentPassword, passwordData.newPassword);
-            setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-            alert('Password updated successfully');
+            const result = await changePassword(
+                passwordData.currentPassword, 
+                passwordData.newPassword
+            );
+            if (result) {
+                setPasswordData({ 
+                    currentPassword: '', 
+                    newPassword: '', 
+                    confirmPassword: '' 
+                });
+                alert('Password updated successfully');
+            }
         } catch (err) {
+            alert(err.message || 'Failed to change password');
             console.error('Failed to change password:', err);
         }
     };
@@ -127,16 +151,16 @@ const UserProfile = () => {
                             </div>
                             <div className="form-group">
                                 <label>Phone</label>
-                                <inpu
-                                type="tel"
-                                value={profileData.phone}
-                                onChange={(e) => setProfileData({
-                                    ...profileData,
-                                    phone: e.target.value
-                                })}
-                                disabled={!isEditing}
-                                 />
-                                 </div>
+                                <input
+                                    type="tel"
+                                    value={profileData.phone}
+                                    onChange={(e) => setProfileData({
+                                        ...profileData,
+                                        phone: e.target.value
+                                    })}
+                                    disabled={!isEditing}
+                                />
+                            </div>
                             {isEditing ? (
                                 <div className="button-group">
                                     <button type="submit" className="save-button">

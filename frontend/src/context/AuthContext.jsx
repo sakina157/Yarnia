@@ -52,9 +52,11 @@ export const AuthProvider = ({ children }) => {
             }
 
             const data = await response.json();
-            setUser(data);
+            setUser({
+                ...data,
+                phone: data.phone || ''
+            });
             localStorage.setItem('user', JSON.stringify(data));
-            
         } catch (err) {
             setError(err.message);
         } finally {
@@ -77,14 +79,14 @@ export const AuthProvider = ({ children }) => {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to update profile');
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to update profile');
             }
 
             const data = await response.json();
             setUser(data);
             localStorage.setItem('user', JSON.stringify(data));
             return data;
-            
         } catch (err) {
             setError(err.message);
             throw err;
@@ -104,18 +106,22 @@ export const AuthProvider = ({ children }) => {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ currentPassword, newPassword })
+                body: JSON.stringify({ 
+                    currentPassword, 
+                    newPassword 
+                })
             });
-    
+
+            const data = await response.json();
+            
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to change password');
+                throw new Error(data.message || 'Failed to change password');
             }
-    
-            return true;
-        } catch (err) {
-            setError(err.message);
-            throw err;
+
+            return data.success;
+        } catch (error) {
+            console.error('Password change error:', error);
+            throw error;
         } finally {
             setLoading(false);
         }

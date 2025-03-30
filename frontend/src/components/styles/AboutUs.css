@@ -1,0 +1,249 @@
+.about-us {
+  background-color: #FFF5F8;
+  overflow-x: hidden;
+}
+
+.parallax-container {
+  height: 80vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.parallax-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #FFE6F0 0%, #FFB6C1 100%);
+  opacity: 0.8;
+}
+
+.parallax-content {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 2;
+}
+
+.about-hero-content h1 {
+  font-family: 'Pacifico', cursive;
+  font-size: 4rem;
+  color: #FF69B4;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.about-hero-content p {
+  font-size: 1.8rem;
+  color: #666;
+  font-weight: 300;
+}
+
+/* Journey Section */
+.our-journey {
+  padding: 6rem 2rem;
+  position: relative;
+  background: white;
+}
+
+.journey-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.floating-yarn-icon {
+  color: #FF69B4;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.journey-content h2 {
+  font-family: 'Pacifico', cursive;
+  color: #FF69B4;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.journey-content p {
+  color: #666;
+  line-height: 1.8;
+  font-size: 1.1rem;
+}
+
+.founder-section {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  margin-top: 4rem;
+  padding: 2rem;
+  background: #FFF5F8;
+  border-radius: 20px;
+}
+
+.founder-image {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 10px 20px rgba(255, 105, 180, 0.2);
+}
+
+.founder-text {
+  text-align: left;
+}
+
+.founder-text h3 {
+  font-family: 'Pacifico', cursive;
+  color: #FF69B4;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* Values Section */
+.our-values {
+  padding: 6rem 2rem;
+  background: #FFF5F8;
+  text-align: center;
+}
+
+.our-values h2 {
+  font-family: 'Pacifico', cursive;
+  color: #FF69B4;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.value-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(255, 105, 180, 0.1);
+}
+
+.value-icon {
+  color: #FF69B4;
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.value-card h3 {
+  color: #FF69B4;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Process Timeline */
+.creation-process {
+  padding: 6rem 2rem;
+  background: white;
+  text-align: center;
+}
+
+.creation-process h2 {
+  font-family: 'Pacifico', cursive;
+  color: #FF69B4;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+}
+
+.process-timeline {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.process-step {
+  position: relative;
+  padding: 2rem;
+}
+
+.step-number {
+  width: 60px;
+  height: 60px;
+  background: #FF69B4;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  color: white;
+  font-size: 1.5rem;
+}
+
+/* Join Journey Section */
+.join-journey {
+  padding: 6rem 2rem;
+  background: #FFF5F8;
+  text-align: center;
+}
+
+.join-content h2 {
+  font-family: 'Pacifico', cursive;
+  color: #FF69B4;
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.shop-now-btn {
+  background: #FF69B4;
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  border-radius: 30px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-top: 2rem;
+}
+
+/* Decorative Elements */
+.decorative-elements {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.floating-element {
+  position: absolute;
+  color: #FF69B4;
+  opacity: 0.1;
+  font-size: 2rem;
+}
+
+.elem1 { top: 20%; left: 10%; }
+.elem2 { top: 60%; right: 10%; }
+
+@media (max-width: 768px) {
+  .about-hero-content h1 {
+    font-size: 3rem;
+  }
+  
+  .founder-section {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+  }
+  
+  .values-grid,
+  .process-timeline {
+    grid-template-columns: 1fr;
+  }
+}

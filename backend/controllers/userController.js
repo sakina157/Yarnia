@@ -16,13 +16,46 @@ const userController = {
     updateProfile: async (req, res) => {
         try {
             const { email, name, phone } = req.body;
+            
+            // Validate the data
+            if (!email || !name || !phone) {
+                return res.status(400).json({ 
+                    success: false,
+                    message: 'Please provide all required fields' 
+                });
+            }
+
+            // Check if email already exists for another user
+            const existingUser = await User.findOne({ 
+                email, 
+                _id: { $ne: req.user.id } 
+            });
+            
+            if (existingUser) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Email already in use'
+                });
+            }
+
             const user = await User.findByIdAndUpdate(
                 req.user.id,
-                { $set: { email, name, phone } },
+                { 
+                    $set: { email, name, phone } 
+                },
                 { new: true }
             ).select('-password');
+
+            if (!user) {
+                return res.status(404).json({ 
+                    success: false,
+                    message: 'User not found' 
+                });
+            }
+
             res.json(user);
         } catch (error) {
+            console.error('Update profile error:', error);
             res.status(500).json({ message: 'Server Error' });
         }
     },
@@ -30,12 +63,22 @@ const userController = {
     changePassword: async (req, res) => {
         try {
             const { currentPassword, newPassword } = req.body;
+            
             const user = await User.findById(req.user.id);
+            if (!user) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'User not found'
+                });
+            }
 
             // Verify current password
             const isMatch = await bcrypt.compare(currentPassword, user.password);
             if (!isMatch) {
-                return res.status(400).json({ message: 'Current password is incorrect' });
+                return res.status(401).json({
+                    success: false,
+                    message: 'Current password is incorrect'
+                });
             }
 
             // Hash new password
@@ -43,9 +86,16 @@ const userController = {
             user.password = await bcrypt.hash(newPassword, salt);
             await user.save();
 
-            res.json({ message: 'Password updated successfully' });
+            res.json({
+                success: true,
+                message: 'Password updated successfully'
+            });
         } catch (error) {
-            res.status(500).json({ message: 'Server Error' });
+            console.error('Change password error:', error);
+            res.status(500).json({
+                success: false,
+                message: 'Server Error'
+            });
         }
     },
 

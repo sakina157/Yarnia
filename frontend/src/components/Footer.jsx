@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaInstagram, FaPinterest, FaFacebook, FaPhone, FaEnvelope } from 'react-icons/fa';
+import { FaPhone, FaEnvelope, FaInstagram, FaPinterest, FaFacebook } from 'react-icons/fa';
 import './styles/Footer.css';
 
 const Footer = () => {
@@ -40,15 +40,16 @@ const Footer = () => {
         <div className="footer-section">
           <h3>Contact Us</h3>
           <div className="contact-info">
-            <p>
+            <a href="tel:+917405707753">
               <FaPhone className="contact-icon" />
-              <a href="tel:+917405707753">+91 7405707753</a>
-            </p>
-            <p>
+              +91 7405707753
+            </a>
+            <a href="mailto:morawalasakina932@gmail.com">
               <FaEnvelope className="contact-icon" />
-              <a href="mailto:morawalasakina932@gmail.com">morawalasakina932@gmail.com</a>
-            </p>
+              morawalasakina932@gmail.com
+            </a>
           </div>
+          
           <div className="social-links">
             <h3>Follow Us</h3>
             <div className="social-icons">

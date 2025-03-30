@@ -1,8 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './styles/Home.css';
 
 const Home = () => {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const sections = document.querySelectorAll('.featured-products, .product-card');
+    sections.forEach(section => observer.observe(section));
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="home">
       <section className="hero">
@@ -13,11 +31,10 @@ const Home = () => {
             Shop Now
           </Link>
         </div>
-        <div className="floating-elements">
-          <img src="/images/flower1.png" alt="" className="float float-1" />
-          <img src="/images/heart.png" alt="" className="float float-2" />
-          <img src="/images/star.png" alt="" className="float float-3" />
-        </div>
+        <div className="bubble"></div>
+        <div className="bubble"></div>
+        <div className="bubble"></div>
+        <div className="scroll-arrow">↓</div>
       </section>
 
       <section className="featured-products">
