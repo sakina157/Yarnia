@@ -73,33 +73,35 @@ router.post('/add', auth, async (req, res) => {
 router.put('/update', auth, async (req, res) => {
     try {
         const { productId, quantity } = req.body;
-        const cart = await Cart.findOne({ user: req.user.id });
         
+        // Validate inputs
+        if (!productId || quantity === undefined) {
+            return res.status(400).json({ message: 'Invalid request data' });
+        }
+
+        const cart = await Cart.findOne({ user: req.user.id });
         if (!cart) {
             return res.status(404).json({ message: 'Cart not found' });
         }
 
-        const item = cart.items.find(item => item.product.toString() === productId);
-        if (!item) {
+        const cartItem = cart.items.find(item => 
+            item.product.toString() === productId
+        );
+        
+        if (!cartItem) {
             return res.status(404).json({ message: 'Item not found in cart' });
         }
 
-        const product = await Product.findById(productId);
-        if (quantity > product.stock) {
-            return res.status(400).json({ message: 'Not enough stock available' });
-        }
-
-        const quantityDiff = quantity - item.quantity;
-        item.quantity = quantity;
-
+        // Update quantity
+        cartItem.quantity = quantity;
         await cart.save();
-        await Product.findByIdAndUpdate(productId, {
-            $inc: { inCartCount: quantityDiff }
-        });
-
+        
+        // Populate product details before sending response
         await cart.populate('items.product');
+        
         res.json(cart);
     } catch (error) {
+        console.error('Cart update error:', error);
         res.status(500).json({ message: 'Error updating cart' });
     }
 });

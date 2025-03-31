@@ -4,12 +4,14 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import './styles/Shop.css';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const Shop = () => {
     const [products, setProducts] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('All');
     const { addToCart } = useCart();
     const { isAuthenticated } = useAuth();
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchProducts();
@@ -74,7 +76,11 @@ const Shop = () => {
             <div className="products-grid">
                 {filteredProducts.map(product => (
                     <div key={product._id} className="product-card">
-                        <div className="product-image-placeholder">
+                        <div 
+                            className="product-image-placeholder"
+                            onClick={() => navigate(`/product/${product._id}`)}
+                            style={{ cursor: 'pointer' }}
+                        >
                             {product.images[0] ? (
                                 <img src={product.images[0]} alt={product.title} />
                             ) : (
@@ -83,7 +89,13 @@ const Shop = () => {
                         </div>
                         <div className="product-info">
                             <div className="product-category">{product.category}</div>
-                            <h3 className="product-name">{product.title}</h3>
+                            <h3 
+                                className="product-name"
+                                onClick={() => navigate(`/product/${product._id}`)}
+                                style={{ cursor: 'pointer' }}
+                            >
+                                {product.title}
+                            </h3>
                             <div className="product-price">₹{product.price}</div>
                             <button 
                                 className="add-to-cart" 

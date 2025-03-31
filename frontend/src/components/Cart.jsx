@@ -4,7 +4,20 @@ import { FaTrash, FaMinus, FaPlus } from 'react-icons/fa';
 import './styles/Cart.css';
 
 const Cart = () => {
-    const { cart, updateQuantity, removeFromCart } = useCart();
+    const { cart, updateQuantity, removeFromCart, loading } = useCart();
+
+    const handleQuantityUpdate = async (productId, newQuantity) => {
+        try {
+            if (loading) return;
+            
+            const result = await updateQuantity(productId, newQuantity);
+            if (!result.success) {
+                console.log('Failed to update quantity');
+            }
+        } catch (error) {
+            console.error('Error in handleQuantityUpdate:', error);
+        }
+    };
 
     if (!cart || cart.items.length === 0) {
         return (
@@ -32,14 +45,17 @@ const Cart = () => {
                             </div>
                             <div className="quantity-controls">
                                 <button 
-                                    onClick={() => updateQuantity(item.product._id, item.quantity - 1)}
-                                    disabled={item.quantity <= 1}
+                                    onClick={() => handleQuantityUpdate(item.product._id, item.quantity - 1)}
+                                    disabled={item.quantity <= 1 || loading}
+                                    className="quantity-btn"
                                 >
                                     <FaMinus />
                                 </button>
                                 <span>{item.quantity}</span>
                                 <button 
-                                    onClick={() => updateQuantity(item.product._id, item.quantity + 1)}
+                                    onClick={() => handleQuantityUpdate(item.product._id, item.quantity + 1)}
+                                    disabled={loading}
+                                    className="quantity-btn"
                                 >
                                     <FaPlus />
                                 </button>
@@ -48,6 +64,7 @@ const Cart = () => {
                             <button 
                                 className="remove-item"
                                 onClick={() => removeFromCart(item.product._id)}
+                                disabled={loading}
                             >
                                 <FaTrash />
                             </button>

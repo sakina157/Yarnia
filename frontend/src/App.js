@@ -16,6 +16,9 @@ import UserProfile from './components/UserProfile';
 import Terms from './components/Term';
 import AdminPanel from './components/admin/AdminPanel';
 import { CartProvider } from './context/CartContext';
+import { SearchProvider } from './context/SearchContext';
+import SearchModal from './components/SearchModal';
+import ProductDetail from './components/ProductDetail';
 
 import './App.css';
 
@@ -23,37 +26,41 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <CartProvider>
-          <div className="App">
-            <ToastContainer 
-              position="top-right"
-              autoClose={3000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="colored"
-            />
-            <Navbar />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/shop" element={<Shop />} />
-              <Route path="/about" element={<AboutUs />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/profile" element={<UserProfile />} />
-              <Route path="/settings" element={<UserProfile />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/admin" element={<AdminPanel />} />
-            </Routes>
-            <Footer />
-          </div>
-        </CartProvider>
+        <SearchProvider>
+          <CartProvider>
+            <div className="App">
+              <ToastContainer 
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+              />
+              <Navbar />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/shop" element={<Shop />} />
+                <Route path="/about" element={<AboutUs />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/profile" element={<UserProfile />} />
+                <Route path="/settings" element={<UserProfile />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/admin" element={<AdminPanel />} />
+                <Route path="/product/:id" element={<ProductDetail />} />
+              </Routes>
+              <SearchModal />
+              <Footer />
+            </div>
+          </CartProvider>
+        </SearchProvider>
       </AuthProvider>
     </Router>
   );

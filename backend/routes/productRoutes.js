@@ -75,6 +75,49 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/search', async (req, res) => {
+    try {
+        const { q, category } = req.query;
+        let query = {};
+
+        if (q) {
+            // Create search query for multiple fields
+            query.$or = [
+                { title: { $regex: q, $options: 'i' } },
+                { description: { $regex: q, $options: 'i' } },
+                { category: { $regex: q, $options: 'i' } }
+            ];
+        }
+
+        if (category && category !== 'All') {
+            query.category = category;
+        }
+
+        const products = await Product.find(query)
+            .select('title description price images category stock') // Select only needed fields
+            .limit(20); // Limit results for better performance
+
+        // Group results by category for better organization
+        const groupedResults = products.reduce((acc, product) => {
+            if (!acc[product.category]) {
+                acc[product.category] = [];
+            }
+            acc[product.category].push(product);
+            return acc;
+        }, {});
+
+        res.json({
+            results: products,
+            groupedResults,
+            total: products.length
+        });
+
+    } catch (error) {
+        console.error('Search error:', error);
+        res.status(500).json({ message: 'Error searching products' });
+    }
+});
+
 // Admin routes
 router.post('/', adminMiddleware, upload.array('images', 5), async (req, res) => {
     try {
@@ -142,6 +185,43 @@ router.put('/:id', adminMiddleware, upload.array('images', 5), async (req, res) 
     } catch (error) {
         console.error('Update error:', error);
         res.status(500).json({ message: 'Error updating product' });
+    }
+});
+
+// Move the related products route BEFORE the :id route
+router.get('/related-products', async (req, res) => {
+    try {
+        const { category, exclude } = req.query;
+        
+        if (!category) {
+            return res.status(400).json({ message: 'Category is required' });
+        }
+
+        const relatedProducts = await Product.find({
+            category: category,
+            _id: { $ne: exclude }
+        })
+        .select('title price images')
+        .limit(4);
+        
+        res.json(relatedProducts);
+    } catch (error) {
+        console.error('Error fetching related products:', error);
+        res.status(500).json({ message: 'Error fetching related products' });
+    }
+});
+
+// Then keep your existing product by ID route
+router.get('/:id', async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        res.json(product);
+    } catch (error) {
+        console.error('Error fetching product:', error);
+        res.status(500).json({ message: 'Error fetching product details' });
     }
 });
 

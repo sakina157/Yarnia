@@ -9,7 +9,7 @@ const Footer = () => {
       <div className="footer-content">
         <div className="footer-section">
           <div className="footer-logo">
-            <img src="/yarn-logo.png" alt="Yarnia Logo" className="footer-logo-img" />
+            <img src="/image/logo.png" alt="Yarnia Logo" className="footer-logo-img" />
             <span className="footer-logo-text">Yarnia</span>
           </div>
           <p className="footer-description">

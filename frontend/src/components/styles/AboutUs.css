@@ -247,3 +247,119 @@
     grid-template-columns: 1fr;
   }
 }
+
+.customer-reviews {
+    padding: 4rem 2rem;
+    background: linear-gradient(to bottom, #fff5f8, #fff);
+    position: relative;
+    overflow: hidden;
+}
+
+.reviews-title {
+    text-align: center;
+    color: #FF69B4;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    font-family: 'Pacifico', cursive;
+}
+
+.reviews-container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.review-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    width: 300px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.1);
+    border: 2px solid #FFE6F0;
+}
+
+.quote-icon {
+    color: #FFB6C1;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.review-text {
+    text-align: center;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-style: italic;
+}
+
+.stars {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.star {
+    color: #ddd;
+    font-size: 1.2rem;
+}
+
+.star.filled {
+    color: #FFD700;
+}
+
+.reviewer-name {
+    font-weight: 600;
+    color: #FF69B4;
+    font-size: 1.1rem;
+    margin-top: auto;
+}
+
+/* Add floating hearts in the background */
+.customer-reviews::before,
+.customer-reviews::after {
+    content: '♥';
+    position: absolute;
+    font-size: 2rem;
+    color: #FFE6F0;
+    animation: float 6s infinite;
+    opacity: 0.5;
+}
+
+.customer-reviews::before {
+    top: 10%;
+    left: 5%;
+}
+
+.customer-reviews::after {
+    bottom: 10%;
+    right: 5%;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-20px) rotate(10deg);
+    }
+}
+
+@media (max-width: 768px) {
+    .reviews-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .review-box {
+        width: 90%;
+        max-width: 300px;
+    }
+}

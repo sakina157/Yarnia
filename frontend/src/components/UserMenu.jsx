@@ -36,7 +36,7 @@ const UserMenu = ({ onClose }) => {
 
   return (
     <div className="user-menu">
-      <div className="user-info">
+      <div className="user-info"> 
         <div className="user-avatar">
           <FaUser className="avatar-icon" />
         </div>

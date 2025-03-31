@@ -84,13 +84,13 @@
 .quantity-controls {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
     background: #FFF5F8;
     padding: 0.5rem;
     border-radius: 25px;
 }
 
-.quantity-controls button {
+.quantity-btn {
     background: white;
     border: none;
     width: 30px;
@@ -105,22 +105,22 @@
     box-shadow: 0 2px 5px rgba(255, 105, 180, 0.2);
 }
 
-.quantity-controls button:hover:not(:disabled) {
+.quantity-btn:hover:not(:disabled) {
     background: #FF69B4;
     color: white;
     transform: scale(1.1);
 }
 
-.quantity-controls button:disabled {
+.quantity-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    background: #f0f0f0;
 }
 
 .quantity-controls span {
-    font-weight: 600;
-    color: #333;
     min-width: 30px;
     text-align: center;
+    font-weight: 600;
 }
 
 .item-total {

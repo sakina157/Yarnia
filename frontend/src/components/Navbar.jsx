@@ -6,6 +6,7 @@ import UserMenu from './UserMenu';
 import CartDropdown from './CartDropdown';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { useSearch } from '../context/SearchContext';
 import './styles/Navbar.css';
 
 const Navbar = () => {
@@ -14,6 +15,7 @@ const Navbar = () => {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const { setIsSearchOpen } = useSearch();
 
   const isAdmin = user?.email === process.env.REACT_APP_ADMIN_EMAIL;
   const cartCount = getCartCount();
@@ -23,7 +25,7 @@ const Navbar = () => {
       <nav className="navbar">
         <div className="navbar-left">
           <Link to="/" className="logo">
-            <img src="/yarn-logo.png" alt="Yarnia Logo" className="logo-img" />
+            <img src="/image/logo.png" alt="Yarnia Logo" className="logo-img" />
             <span className="logo-text">Yarnia</span>
           </Link>
         </div>
@@ -37,7 +39,10 @@ const Navbar = () => {
         </div>
         
         <div className="navbar-right">
-          <button className="icon-button">
+          <button 
+            className="icon-button"
+            onClick={() => setIsSearchOpen(true)}
+          >
             <FaSearch className="nav-icon" />
           </button>
           <div className="user-icon-container">

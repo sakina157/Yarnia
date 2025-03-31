@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { FaHeart, FaGem, FaMagic, FaYarn, FaStar, FaLeaf } from 'react-icons/fa';
+import { FaHeart, FaGem, FaMagic, FaYarn, FaStar, FaLeaf, FaQuoteLeft, FaQuoteRight } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
 import './styles/AboutUs.css';
 
 const AboutUs = () => {
@@ -21,6 +22,22 @@ const AboutUs = () => {
         repeat: Infinity,
         ease: "easeInOut"
       }
+    }
+  };
+
+  const [featuredReviews, setFeaturedReviews] = useState([]);
+
+  useEffect(() => {
+    fetchFeaturedReviews();
+  }, []);
+
+  const fetchFeaturedReviews = async () => {
+    try {
+      const response = await fetch('/api/reviews/featured');
+      const data = await response.json();
+      setFeaturedReviews(data.reviews.slice(0, 3));
+    } catch (error) {
+      console.error('Error fetching featured reviews:', error);
     }
   };
 
@@ -174,6 +191,75 @@ const AboutUs = () => {
             Explore Our Collection
           </motion.button>
         </motion.div>
+      </section>
+
+      <section className="customer-reviews">
+        <motion.h2 
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="reviews-title"
+        >
+          Love from Our Beautiful Customers
+        </motion.h2>
+        <div className="reviews-container">
+          {featuredReviews.map((review, index) => (
+            <motion.div
+              key={review._id}
+              className="review-box"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ 
+                duration: 0.6, 
+                delay: index * 0.2,
+                type: "spring",
+                stiffness: 100
+              }}
+              whileHover={{ 
+                scale: 1.05,
+                boxShadow: "0 8px 20px rgba(255, 105, 180, 0.2)"
+              }}
+            >
+              <motion.div 
+                className="quote-icon"
+                animate={{ 
+                  rotate: [0, 10, -10, 0],
+                  scale: [1, 1.1, 1]
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }}
+              >
+                <FaQuoteLeft />
+              </motion.div>
+              <p className="review-text">{review.review}</p>
+              <div className="stars">
+                {[...Array(5)].map((_, i) => (
+                  <motion.span
+                    key={i}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: i * 0.1 }}
+                  >
+                    <FaStar 
+                      className={i < review.rating ? 'star filled' : 'star'} 
+                    />
+                  </motion.span>
+                ))}
+              </div>
+              <motion.div 
+                className="reviewer-name"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+              >
+                {review.user?.name || 'Happy Customer'}
+              </motion.div>
+            </motion.div>
+          ))}
+        </div>
       </section>
 
       <div className="decorative-elements">

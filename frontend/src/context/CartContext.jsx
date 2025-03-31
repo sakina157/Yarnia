@@ -75,16 +75,12 @@ export const CartProvider = ({ children }) => {
             setLoading(true);
             const token = localStorage.getItem('token');
             
-            // First check stock
-            const stockResponse = await fetch(`/api/products/${productId}`);
-            const productData = await stockResponse.json();
-            
-            if (newQuantity > productData.stock) {
-                toast.error(`Only ${productData.stock} items available`);
-                return { success: false, message: 'Not enough stock' };
+            if (newQuantity < 1) {
+                toast.error('Quantity cannot be less than 1');
+                return { success: false };
             }
 
-            // Continue with update if stock is available
+            // First check stock
             const response = await fetch(`/api/cart/update`, {
                 method: 'PUT',
                 headers: {
@@ -97,10 +93,16 @@ export const CartProvider = ({ children }) => {
             const data = await response.json();
             if (response.ok) {
                 setCart(data);
+                toast.success('Cart updated successfully');
                 return { success: true };
+            } else {
+                toast.error(data.message || 'Error updating cart');
+                return { success: false };
             }
         } catch (error) {
-            setError('Error updating quantity');
+            console.error('Error updating quantity:', error);
+            toast.error('Error updating quantity');
+            return { success: false };
         } finally {
             setLoading(false);
         }

@@ -6,6 +6,7 @@ const contactRoutes = require('./routes/contactRoutes');
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const cartRoutes = require('./routes/cartRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
 const path = require('path');
 require('dotenv').config();
 
@@ -32,6 +33,13 @@ app.use('/api/users', userRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/reviews', reviewRoutes);
+
+// Add this error handling middleware after your routes
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ message: 'Something went wrong!' });
+});
 
 const PORT = process.env.PORT || 5000;
 
