@@ -7,6 +7,7 @@ const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -23,10 +24,8 @@ app.use(cors({
 
 app.use(express.json());
 
-// Test route
-app.get('/', (req, res) => {
-    res.json({ message: 'Backend API is running' });
-});
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -35,6 +34,11 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/reviews', reviewRoutes);
+
+// Basic route to test API
+app.get('/', (req, res) => {
+    res.json({ message: 'Backend API is running' });
+});
 
 // Error handling
 app.use((err, req, res, next) => {
