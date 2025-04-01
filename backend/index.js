@@ -36,6 +36,12 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/reviews', reviewRoutes);
 
+// Error handling
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).json({ message: 'Internal Server Error' });
+});
+
 // For local development
 if (process.env.NODE_ENV !== 'production') {
     const PORT = process.env.PORT || 5000;
