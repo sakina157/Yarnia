@@ -6,6 +6,8 @@ import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import './styles/ProductDetail.css';
 import ReviewSection from './ReviewSection';
+import { api } from '../services/api';
+import { getImageUrl } from '../utils/imageUtils';
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -32,8 +34,7 @@ const ProductDetail = () => {
 
     const fetchProductDetails = async () => {
         try {
-            const response = await fetch(`/api/products/${id}`);
-            const data = await response.json();
+            const data = await api.get(`/api/products/${id}`);
             setProduct(data);
         } catch (error) {
             toast.error('Error loading product details');
@@ -90,8 +91,7 @@ const ProductDetail = () => {
 
     const fetchRelatedProducts = async () => {
         try {
-            const response = await fetch(`/api/products/related-products?category=${product.category}&exclude=${product._id}`);
-            const data = await response.json();
+            const data = await api.get(`/api/products/related-products?category=${product.category}&exclude=${product._id}`);
             setRelatedProducts(data);
         } catch (error) {
             console.error('Error fetching related products:', error);
@@ -141,8 +141,12 @@ const ProductDetail = () => {
                             <FaArrowLeft />
                         </button>
                         <img 
-                            src={product.images[currentImageIndex]} 
-                            alt={product.title} 
+                            src={getImageUrl(product.images[currentImageIndex])} 
+                            alt={product.title}
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = '/placeholder.png';
+                            }}
                         />
                         <button 
                             className="gallery-nav next"
@@ -160,7 +164,14 @@ const ProductDetail = () => {
                                 className={`thumbnail ${currentImageIndex === index ? 'active' : ''}`}
                                 onClick={() => setCurrentImageIndex(index)}
                             >
-                                <img src={image} alt={`${product.title} ${index + 1}`} />
+                                <img 
+                                    src={getImageUrl(image)} 
+                                    alt={`${product.title} ${index + 1}`}
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = '/placeholder.png';
+                                    }}
+                                />
                             </div>
                         ))}
                     </div>
@@ -243,8 +254,12 @@ const ProductDetail = () => {
                             >
                                 <div className="related-product-image">
                                     <img 
-                                        src={relatedProduct.images[0]} 
-                                        alt={relatedProduct.title} 
+                                        src={getImageUrl(relatedProduct.images[0])} 
+                                        alt={relatedProduct.title}
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = '/placeholder.png';
+                                        }}
                                     />
                                 </div>
                                 <div className="related-product-info">

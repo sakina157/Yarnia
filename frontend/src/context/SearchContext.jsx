@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { toast } from 'react-toastify';
+import { api } from '../services/api';
 
 const SearchContext = createContext();
 
@@ -51,10 +52,7 @@ export const SearchProvider = ({ children }) => {
                 category: selectedCategory
             });
 
-            const response = await fetch(`/api/products/search?${params}`);
-            if (!response.ok) throw new Error('Search failed');
-
-            const data = await response.json();
+            const data = await api.get(`/api/products/search?${params}`);
             setSearchResults(data);
             
             if (query.trim()) {

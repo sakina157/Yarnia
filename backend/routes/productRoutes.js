@@ -8,10 +8,12 @@ const path = require('path');
 // Configure multer for image uploads
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null, './uploads/');
+        cb(null, path.join(__dirname, '../uploads/'));
     },
     filename: function(req, file, cb) {
-        cb(null, 'product-' + Date.now() + path.extname(file.originalname));
+        // Sanitize filename
+        const sanitizedFilename = file.originalname.replace(/[^a-zA-Z0-9.]/g, '_');
+        cb(null, 'product-' + Date.now() + '-' + sanitizedFilename);
     }
 });
 
@@ -122,21 +124,65 @@ router.get('/search', async (req, res) => {
 router.post('/', adminMiddleware, upload.array('images', 5), async (req, res) => {
     try {
         const { title, description, price, category, stock } = req.body;
+        
+        // Validate required fields
+        if (!title || !description || !price || !category || !stock) {
+            return res.status(400).json({ 
+                message: 'Missing required fields',
+                details: {
+                    title: !title ? 'Title is required' : null,
+                    description: !description ? 'Description is required' : null,
+                    price: !price ? 'Price is required' : null,
+                    category: !category ? 'Category is required' : null,
+                    stock: !stock ? 'Stock is required' : null
+                }
+            });
+        }
+
+        // Validate file upload
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({ message: 'At least one image is required' });
+        }
+
+        // Convert and validate price and stock
+        const numericPrice = Number(price);
+        const numericStock = Number(stock);
+
+        if (isNaN(numericPrice) || numericPrice <= 0 || numericPrice > 1000000) {
+            return res.status(400).json({ message: 'Invalid price value. Price must be between 1 and 1,000,000' });
+        }
+
+        if (isNaN(numericStock) || numericStock < 0 || numericStock > 10000) {
+            return res.status(400).json({ message: 'Invalid stock value. Stock must be between 0 and 10,000' });
+        }
+
+        // Process image paths
         const images = req.files.map(file => `/uploads/${file.filename}`);
 
         const product = new Product({
-            title,
-            description,
-            price,
-            category,
-            stock,
+            title: title.trim(),
+            description: description.trim(),
+            price: numericPrice,
+            category: category.trim(),
+            stock: numericStock,
             images
         });
 
-        await product.save();
-        res.status(201).json(product);
+        const savedProduct = await product.save();
+        console.log('Product created successfully:', savedProduct);
+        res.status(201).json(savedProduct);
     } catch (error) {
-        res.status(500).json({ message: 'Error creating product' });
+        console.error('Error creating product:', error);
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({ 
+                message: 'Validation error',
+                details: Object.values(error.errors).map(err => err.message)
+            });
+        }
+        res.status(500).json({ 
+            message: 'Error creating product',
+            error: error.message 
+        });
     }
 });
 
@@ -159,12 +205,25 @@ router.delete('/:id', adminMiddleware, async (req, res) => {
 router.put('/:id', adminMiddleware, upload.array('images', 5), async (req, res) => {
     try {
         const { title, description, price, category, stock } = req.body;
+
+        // Convert and validate price and stock
+        const numericPrice = Number(price);
+        const numericStock = Number(stock);
+
+        if (isNaN(numericPrice) || numericPrice <= 0 || numericPrice > 1000000) {
+            return res.status(400).json({ message: 'Invalid price value. Price must be between 1 and 1,000,000' });
+        }
+
+        if (isNaN(numericStock) || numericStock < 0 || numericStock > 10000) {
+            return res.status(400).json({ message: 'Invalid stock value. Stock must be between 0 and 10,000' });
+        }
+
         const updateData = {
-            title,
-            description,
-            price,
-            category,
-            stock
+            title: title.trim(),
+            description: description.trim(),
+            price: numericPrice,
+            category: category.trim(),
+            stock: numericStock
         };
 
         // Only update images if new ones are uploaded
@@ -175,15 +234,23 @@ router.put('/:id', adminMiddleware, upload.array('images', 5), async (req, res) 
         const product = await Product.findByIdAndUpdate(
             req.params.id,
             updateData,
-            { new: true }
+            { new: true, runValidators: true }
         );
 
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
+
+        console.log('Product updated successfully:', product);
         res.json(product);
     } catch (error) {
         console.error('Update error:', error);
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({ 
+                message: 'Validation error',
+                details: Object.values(error.errors).map(err => err.message)
+            });
+        }
         res.status(500).json({ message: 'Error updating product' });
     }
 });

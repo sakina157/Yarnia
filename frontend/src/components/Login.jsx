@@ -3,6 +3,7 @@ import { FaTimes, FaEnvelope, FaLock } from 'react-icons/fa';
 import { Signup } from './Signup';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { api } from '../services/api';
 import './styles/Auth.css';
 
 export const Login = ({ isOpen, onClose }) => {
@@ -27,17 +28,9 @@ export const Login = ({ isOpen, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-
-        const data = await response.json();
+        const data = await api.post('/api/auth/login', formData);
         
-        if (response.ok) {
+        if (data.user && data.token) {
             login(data.user, data.token);
             // Check if user is admin
             if (data.user.email === process.env.REACT_APP_ADMIN_EMAIL) {

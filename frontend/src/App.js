@@ -19,8 +19,40 @@ import { CartProvider } from './context/CartContext';
 import { SearchProvider } from './context/SearchContext';
 import SearchModal from './components/SearchModal';
 import ProductDetail from './components/ProductDetail';
+import axios from 'axios';
+
 
 import './App.css';
+
+axios.defaults.baseURL = process.env.REACT_APP_API_URL
+axios.defaults.withCredentials = true
+axios.defaults.headers.common['Content-Type'] = 'application/json';
+
+// Add request interceptor
+axios.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
+
+// Add response interceptor
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response) {
+      console.error('Response error:', error.response.data);
+    }
+    return Promise.reject(error);
+  }
+);
+
 
 function App() {
   return (

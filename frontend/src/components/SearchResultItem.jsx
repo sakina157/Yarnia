@@ -1,9 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaShoppingCart } from 'react-icons/fa';
+import { FaShoppingCart, FaImage } from 'react-icons/fa';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
+import { getImageUrl } from '../utils/imageUtils';
 
 const SearchResultItem = ({ product, onClose }) => {
     const navigate = useNavigate();
@@ -31,14 +32,20 @@ const SearchResultItem = ({ product, onClose }) => {
     return (
         <div className="search-result-item" onClick={handleClick}>
             <div className="result-image">
-                <img 
-                    src={product.images[0]} 
-                    alt={product.title}
-                    onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = '/placeholder.png'; // Add a placeholder image
-                    }}
-                />
+                {product.images && product.images[0] ? (
+                    <img 
+                        src={getImageUrl(product.images[0])} 
+                        alt={product.title}
+                        onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = '/placeholder.png';
+                        }}
+                    />
+                ) : (
+                    <div className="placeholder-image">
+                        <FaImage />
+                    </div>
+                )}
             </div>
             <div className="result-details">
                 <h4>{product.title}</h4>

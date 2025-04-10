@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { FaHeart, FaGem, FaMagic, FaYarn, FaStar, FaLeaf, FaQuoteLeft, FaQuoteRight } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
+import { api } from '../services/api';
 import './styles/AboutUs.css';
 
 const AboutUs = () => {
@@ -33,8 +34,7 @@ const AboutUs = () => {
 
   const fetchFeaturedReviews = async () => {
     try {
-      const response = await fetch('/api/reviews/featured');
-      const data = await response.json();
+      const data = await api.get('/api/reviews/featured');
       setFeaturedReviews(data.reviews.slice(0, 3));
     } catch (error) {
       console.error('Error fetching featured reviews:', error);

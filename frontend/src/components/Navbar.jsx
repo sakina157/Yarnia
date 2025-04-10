@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FaSearch, FaUser, FaShoppingCart } from 'react-icons/fa';
 import { Login } from './Login';
 import UserMenu from './UserMenu';
@@ -16,9 +16,11 @@ const Navbar = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const { setIsSearchOpen } = useSearch();
+  const location = useLocation();
 
   const isAdmin = user?.email === process.env.REACT_APP_ADMIN_EMAIL;
   const cartCount = getCartCount();
+  const isCartPage = location.pathname === '/cart';
 
   return (
     <>
@@ -62,7 +64,7 @@ const Navbar = () => {
               onClick={() => setIsCartOpen(!isCartOpen)}
             >
               <FaShoppingCart className="nav-icon" />
-              {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
+              {cartCount > 0 && !isCartPage && <span className="cart-count">{cartCount}</span>}
             </button>
             {isCartOpen && <CartDropdown onClose={() => setIsCartOpen(false)} />}
           </div>

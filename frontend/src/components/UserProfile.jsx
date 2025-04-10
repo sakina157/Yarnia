@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { FaUser, FaCamera, FaLock, FaTrash } from 'react-icons/fa';
 import './styles/UserProfile.css';
 
+
 const UserProfile = () => {
     const { user, isAuthenticated, loading, error, updateUserProfile, changePassword, deleteAccount } = useAuth();
     const navigate = useNavigate();

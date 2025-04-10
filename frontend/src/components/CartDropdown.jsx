@@ -1,8 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaTimes, FaShoppingBag } from 'react-icons/fa';
+import { FaTimes, FaShoppingBag, FaImage } from 'react-icons/fa';
 import { useCart } from '../context/CartContext';
 import './styles/CartDropdown.css';
+import { getImageUrl } from '../utils/imageUtils';
 
 const CartDropdown = ({ onClose }) => {
     const { cart, removeFromCart } = useCart();
@@ -11,6 +12,13 @@ const CartDropdown = ({ onClose }) => {
     const handleViewCart = () => {
         navigate('/cart');
         onClose();
+    };
+
+    const handleRemoveItem = async (productId) => {
+        const result = await removeFromCart(productId);
+        if (!result.success) {
+            console.error('Failed to remove item from cart');
+        }
     };
 
     return (
@@ -23,20 +31,30 @@ const CartDropdown = ({ onClose }) => {
             </div>
             
             <div className="cart-items">
-                {cart?.items.length > 0 ? (
+                {cart?.items?.length > 0 ? (
                     cart.items.map(item => (
-                        <div key={item.product._id} className="cart-item">
-                            <img 
-                                src={item.product.images[0]} 
-                                alt={item.product.title} 
-                            />
+                        <div key={item.product?._id || item.productId} className="cart-item">
+                            {item.product?.images?.[0] ? (
+                                <img 
+                                    src={getImageUrl(item.product.images[0])} 
+                                    alt={item.product?.title || 'Product'}
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = '/placeholder.png';
+                                    }}
+                                />
+                            ) : (
+                                <div className="placeholder-image">
+                                    <FaImage />
+                                </div>
+                            )}
                             <div className="item-details">
-                                <h4>{item.product.title}</h4>
-                                <p>₹{item.price} × {item.quantity}</p>
+                                <h4>{item.product?.title || 'Product'}</h4>
+                                <p>₹{item.price || item.product?.price || 0} × {item.quantity}</p>
                             </div>
                             <button 
                                 className="remove-btn"
-                                onClick={() => removeFromCart(item.product._id)}
+                                onClick={() => handleRemoveItem(item.product?._id || item.productId)}
                             >
                                 <FaTimes />
                             </button>
@@ -50,11 +68,11 @@ const CartDropdown = ({ onClose }) => {
                 )}
             </div>
 
-            {cart?.items.length > 0 && (
+            {cart?.items?.length > 0 && (
                 <div className="cart-footer">
                     <div className="cart-total">
                         <span>Total:</span>
-                        <span>₹{cart.total}</span>
+                        <span>₹{cart.total || 0}</span>
                     </div>
                     <button className="view-cart-btn" onClick={handleViewCart}>
                         View Cart

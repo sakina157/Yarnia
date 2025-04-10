@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { FaPlus, FaEdit, FaTrash, FaImage } from 'react-icons/fa';
+import { api } from '../../services/api';
 import './styles/AdminPanel.css';
 
 const AdminPanel = () => {
@@ -31,8 +32,7 @@ const AdminPanel = () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await fetch('/api/products');
-            const data = await response.json();
+            const data = await api.get('/api/products');
             setProducts(data);
         } catch (error) {
             console.error('Error fetching products:', error);
@@ -41,43 +41,44 @@ const AdminPanel = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const formDataToSend = new FormData();
-        
-        // Append all form data
-        Object.keys(formData).forEach(key => {
-            if (key === 'images') {
-                for (let i = 0; i < formData.images.length; i++) {
-                    formDataToSend.append('images', formData.images[i]);
-                }
-            } else {
-                formDataToSend.append(key, formData[key]);
-            }
-        });
-
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch('/api/products', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-                body: formDataToSend
+            const formDataToSend = new FormData();
+            
+            // Append all form data
+            Object.keys(formData).forEach(key => {
+                if (key === 'images') {
+                    // Handle FileList or File objects
+                    const files = formData.images;
+                    for (let i = 0; i < files.length; i++) {
+                        formDataToSend.append('images', files[i]);
+                    }
+                } else {
+                    formDataToSend.append(key, formData[key]);
+                }
             });
 
-            if (response.ok) {
-                setIsAddModalOpen(false);
-                setFormData({
-                    title: '',
-                    description: '',
-                    price: '',
-                    category: 'Keychain',
-                    stock: '',
-                    images: []
-                });
-                fetchProducts();
-            }
+            const response = await api.post('/api/products', formDataToSend, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+
+            // The response is the created product object
+            setProducts([...products, response]);
+            setIsAddModalOpen(false);
+            setFormData({
+                title: '',
+                description: '',
+                price: '',
+                category: 'Keychain',
+                stock: '',
+                images: []
+            });
+            alert('Product added successfully!');
+            fetchProducts(); // Refresh the products list
         } catch (error) {
             console.error('Error adding product:', error);
+            alert(error.response?.data?.message || 'Error adding product. Please try again.');
         }
     };
 
@@ -105,7 +106,6 @@ const AdminPanel = () => {
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-            const token = localStorage.getItem('token');
             const formDataToSend = new FormData();
             
             // Append text fields
@@ -116,60 +116,51 @@ const AdminPanel = () => {
             formDataToSend.append('stock', formData.stock);
 
             // Append new images if any
-            if (formData.images instanceof FileList) {
+            if (formData.images && formData.images.length > 0) {
                 for (let i = 0; i < formData.images.length; i++) {
                     formDataToSend.append('images', formData.images[i]);
                 }
             }
 
-            const response = await fetch(`/api/products/${editingProductId}`, {
-                method: 'PUT',
+            const updatedProduct = await api.put(`/api/products/${editingProductId}`, formDataToSend, {
                 headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-                body: formDataToSend
+                    'Content-Type': 'multipart/form-data'
+                }
             });
 
-            if (response.ok) {
-                const updatedProduct = await response.json();
-                setProducts(products.map(p => 
-                    p._id === editingProductId ? updatedProduct : p
-                ));
-                setIsAddModalOpen(false);
-                setIsEditing(false);
-                setEditingProductId(null);
-                alert('Product updated successfully');
-            } else {
-                const errorData = await response.json();
-                alert(errorData.message || 'Error updating product');
-            }
+            // Update the products list with the updated product
+            setProducts(products.map(p => 
+                p._id === editingProductId ? updatedProduct : p
+            ));
+            setIsAddModalOpen(false);
+            setIsEditing(false);
+            setEditingProductId(null);
+            setFormData({
+                title: '',
+                description: '',
+                price: '',
+                category: 'Keychain',
+                stock: '',
+                images: []
+            });
+            alert('Product updated successfully');
+            fetchProducts(); // Refresh the list to get updated data
         } catch (error) {
             console.error('Error updating product:', error);
-            alert('Error updating product');
+            alert(error.response?.data?.message || 'Error updating product');
         }
     };
 
     const handleDelete = async (productId) => {
         if (window.confirm('Are you sure you want to delete this product?')) {
             try {
-                const token = localStorage.getItem('token');
-                const response = await fetch(`/api/products/${productId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (response.ok) {
-                    // Remove product from state
-                    setProducts(products.filter(product => product._id !== productId));
-                    alert('Product deleted successfully');
-                } else {
-                    alert('Failed to delete product');
-                }
+                await api.delete(`/api/products/${productId}`);
+                // If we reach here, deletion was successful
+                setProducts(products.filter(product => product._id !== productId));
+                alert('Product deleted successfully');
             } catch (error) {
                 console.error('Error deleting product:', error);
-                alert('Error deleting product');
+                alert(error.response?.data?.message || 'Failed to delete product');
             }
         }
     };
@@ -191,8 +182,14 @@ const AdminPanel = () => {
                 {products.map(product => (
                     <div key={product._id} className="product-item">
                         <div className="product-image">
-                            {product.images[0] ? (
-                                <img src={product.images[0]} alt={product.title} />
+                            {product.images && product.images[0] ? (
+                                <img 
+                                    src={product.images[0].startsWith('http') 
+                                        ? product.images[0] 
+                                        : `${process.env.REACT_APP_API_URL}${product.images[0]}`
+                                    } 
+                                    alt={product.title}
+                                />
                             ) : (
                                 <FaImage className="placeholder-image" />
                             )}

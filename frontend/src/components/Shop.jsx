@@ -5,6 +5,8 @@ import { useAuth } from '../context/AuthContext';
 import './styles/Shop.css';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../services/api';
+import { getImageUrl } from '../utils/imageUtils';
 
 const Shop = () => {
     const [products, setProducts] = useState([]);
@@ -19,8 +21,7 @@ const Shop = () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await fetch('/api/products');
-            const data = await response.json();
+            const data = await api.get('/api/products');
             setProducts(data);
         } catch (error) {
             console.error('Error fetching products:', error);
@@ -81,8 +82,15 @@ const Shop = () => {
                             onClick={() => navigate(`/product/${product._id}`)}
                             style={{ cursor: 'pointer' }}
                         >
-                            {product.images[0] ? (
-                                <img src={product.images[0]} alt={product.title} />
+                            {product.images && product.images[0] ? (
+                                <img 
+                                    src={getImageUrl(product.images[0])} 
+                                    alt={product.title}
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = '/placeholder.png'; // Add a placeholder image
+                                    }}
+                                />
                             ) : (
                                 <FaImage />
                             )}

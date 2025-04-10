@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaStar } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
+import { api } from '../services/api';
 import './styles/ReviewSection.css';
 
 const ReviewSection = ({ productId }) => {
@@ -22,19 +23,7 @@ const ReviewSection = ({ productId }) => {
 
     const fetchReviews = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch(`/api/reviews/product/${productId}`, {
-                headers: {
-                    'Accept': 'application/json',
-                    'Authorization': token ? `Bearer ${token}` : ''
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
+            const data = await api.get(`/api/reviews/product/${productId}`);
             setReviews(data.reviews || []);
             setAvgRating(data.avgRating || 0);
             setTotalReviews(data.total || 0);
@@ -58,25 +47,11 @@ const ReviewSection = ({ productId }) => {
 
         setIsSubmitting(true);
         try {
-            const token = localStorage.getItem('token');
-            const response = await fetch('/api/reviews', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    productId,
-                    rating: userRating,
-                    review: reviewText.trim()
-                })
+            const response = await api.post('/api/reviews', {
+                productId,
+                rating: userRating,
+                review: reviewText.trim()
             });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || 'Error submitting review');
-            }
 
             toast.success('Review submitted successfully');
             setUserRating(0);
@@ -85,7 +60,11 @@ const ReviewSection = ({ productId }) => {
             fetchReviews();
         } catch (error) {
             console.error('Error submitting review:', error);
-            toast.error(error.message || 'Error submitting review');
+            if (error.response?.status === 400 && error.response?.data?.message === 'You have already reviewed this product') {
+                toast.error('You have already reviewed this product');
+            } else {
+                toast.error(error.response?.data?.message || 'Error submitting review');
+            }
         } finally {
             setIsSubmitting(false);
         }

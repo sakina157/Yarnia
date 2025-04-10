@@ -64,6 +64,7 @@ const userController = {
         try {
             const { currentPassword, newPassword } = req.body;
             
+            // Find user with password field
             const user = await User.findById(req.user.id);
             if (!user) {
                 return res.status(404).json({
@@ -81,10 +82,14 @@ const userController = {
                 });
             }
 
-            // Hash new password
+            // Generate salt and hash new password
             const salt = await bcrypt.genSalt(10);
-            user.password = await bcrypt.hash(newPassword, salt);
-            await user.save();
+            const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+            // Update password directly in database
+            await User.findByIdAndUpdate(req.user.id, {
+                $set: { password: hashedPassword }
+            });
 
             res.json({
                 success: true,

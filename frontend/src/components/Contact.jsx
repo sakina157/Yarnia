@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaInstagram, FaPinterest, FaFacebook } from 'react-icons/fa';
 import './styles/Contact.css';
+import { api } from '../services/api';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -14,26 +15,15 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await fetch('/api/contact/submit', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData)
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            alert(data.message);
+        const response = await api.post('/api/contact/submit', formData);
+        if (response.success) {
+            alert(response.message);
             setFormData({
                 name: '',
                 email: '',
                 subject: '',
                 message: ''
             });
-        } else {
-            alert('Failed to send message. Please try again.');
         }
     } catch (error) {
         console.error('Contact form error:', error);

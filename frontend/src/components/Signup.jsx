@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FaTimes, FaEnvelope, FaLock, FaPhone } from 'react-icons/fa';
 import { useNavigate, useLocation, Link} from 'react-router-dom';
+import { api } from '../services/api';
 import './styles/Auth.css';
 
 export const Signup = ({ isOpen, onClose, onBackToLogin }) => {
@@ -32,15 +33,7 @@ export const Signup = ({ isOpen, onClose, onBackToLogin }) => {
             return;
         }
 
-        const response = await fetch('/api/auth/signup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData)
-        });
-
-        const data = await response.json();
+        const data = await api.post('/api/auth/signup', formData);
 
         if (data.success) {
             alert('Account created successfully!');

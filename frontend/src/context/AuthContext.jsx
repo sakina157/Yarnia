@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { api } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -40,18 +41,7 @@ export const AuthProvider = ({ children }) => {
         try {
             setLoading(true);
             setError(null);
-            const token = localStorage.getItem('token');
-            const response = await fetch('/api/users/profile', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            
-            if (!response.ok) {
-                throw new Error('Failed to fetch profile');
-            }
-
-            const data = await response.json();
+            const data = await api.get('/api/users/profile');
             setUser({
                 ...data,
                 phone: data.phone || ''
@@ -68,22 +58,7 @@ export const AuthProvider = ({ children }) => {
         try {
             setLoading(true);
             setError(null);
-            const token = localStorage.getItem('token');
-            const response = await fetch('/api/users/profile', {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updateData)
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to update profile');
-            }
-
-            const data = await response.json();
+            const data = await api.put('/api/users/profile', updateData);
             setUser(data);
             localStorage.setItem('user', JSON.stringify(data));
             return data;
@@ -99,25 +74,10 @@ export const AuthProvider = ({ children }) => {
         try {
             setLoading(true);
             setError(null);
-            const token = localStorage.getItem('token');
-            const response = await fetch('/api/users/change-password', {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 
-                    currentPassword, 
-                    newPassword 
-                })
+            const data = await api.put('/api/users/change-password', { 
+                currentPassword, 
+                newPassword 
             });
-
-            const data = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(data.message || 'Failed to change password');
-            }
-
             return data.success;
         } catch (error) {
             console.error('Password change error:', error);
@@ -127,24 +87,11 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    const deleteAccount = async () => { // Removed password parameter as it's not needed
+    const deleteAccount = async () => {
         try {
             setLoading(true);
             setError(null);
-            const token = localStorage.getItem('token');
-            const response = await fetch('/api/users/delete-account', {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-    
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to delete account');
-            }
-    
+            await api.delete('/api/users/delete-account');
             logout();
             return true;
         } catch (err) {
