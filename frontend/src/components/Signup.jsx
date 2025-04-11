@@ -30,29 +30,60 @@ export const Signup = ({ isOpen, onClose, onBackToLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+        // Client-side validation
+        if (!formData.phone || !formData.email || !formData.password || !formData.confirmPassword) {
+            alert('Please fill in all fields');
+            return;
+        }
+
+        // Phone number validation
+        if (!/^\d{10}$/.test(formData.phone)) {
+            alert('Please enter a valid 10-digit phone number');
+            return;
+        }
+
+        // Email validation
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            alert('Please enter a valid email address');
+            return;
+        }
+
+        // Password validation
+        if (formData.password.length < 6) {
+            alert('Password must be at least 6 characters long');
+            return;
+        }
+
         if (formData.password !== formData.confirmPassword) {
             alert('Passwords do not match');
             return;
         }
 
-        const data = await api.post('/api/auth/signup', formData);
+        // Remove confirmPassword from the data sent to the server
+        const signupData = {
+            phone: formData.phone,
+            email: formData.email,
+            password: formData.password,
+            acceptedTerms: formData.acceptedTerms
+        };
 
-        if (data.success) {
+        const response = await api.post('/api/auth/signup', signupData);
+        
+        if (response.success) {
             alert('Account created successfully!');
             if (isStandalone) {
                 navigate('/login');
             } else {
-              onBackToLogin();
+                onBackToLogin();
             }
         } else {
-            alert(data.message || 'Signup failed');
+            alert(response.message || 'Signup failed');
         }
     } catch (error) {
         console.error('Signup error:', error);
-        alert('Error creating account. Please try again.');
+        const errorMessage = error.response?.data?.message || 'Error creating account. Please try again.';
+        alert(errorMessage);
     }
-
-    console.log('Signup form submitted:', formData);
   };
 
   const handleClose = () => {

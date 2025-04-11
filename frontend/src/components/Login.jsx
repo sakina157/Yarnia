@@ -29,12 +29,12 @@ export const Login = ({ isOpen, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const data = await api.post('/api/auth/login', formData);
+        const response = await api.post('/api/auth/login', formData);
         
-        if (data.user && data.token) {
-            login(data.user, data.token);
+        if (response.success) {
+            login(response.user, response.token);
             // Check if user is admin
-            if (data.user.email === process.env.REACT_APP_ADMIN_EMAIL) {
+            if (response.user.email === process.env.REACT_APP_ADMIN_EMAIL) {
                 navigate('/admin');
             } else if (isStandalone) {
                 navigate('/');
@@ -42,11 +42,11 @@ export const Login = ({ isOpen, onClose }) => {
                 onClose();
             }
         } else {
-            alert(data.message || 'Login failed');
+            alert(response.message || 'Login failed');
         }
     } catch (error) {
         console.error('Login error:', error);
-        alert('Error logging in. Please try again.');
+        alert(error.response?.data?.message || 'Error logging in. Please try again.');
     }
 
     console.log('Login form submitted:', formData);

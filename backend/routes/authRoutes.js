@@ -8,13 +8,37 @@ const bcrypt = require('bcryptjs');
 // Signup Route
 router.post('/signup', async (req, res) => {
     try {
-        const { phone, email, password, confirmPassword, acceptedTerms } = req.body;
+        const { phone, email, password, acceptedTerms } = req.body;
 
-        // Check if passwords match
-        if (password !== confirmPassword) {
+        // Validate required fields
+        if (!phone || !email || !password || acceptedTerms === undefined) {
             return res.status(400).json({
                 success: false,
-                message: 'Passwords do not match'
+                message: 'All fields are required'
+            });
+        }
+
+        // Validate phone number format
+        if (!/^\d{10}$/.test(phone)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid phone number format. Must be 10 digits.'
+            });
+        }
+
+        // Validate email format
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid email format'
+            });
+        }
+
+        // Validate password length
+        if (password.length < 6) {
+            return res.status(400).json({
+                success: false,
+                message: 'Password must be at least 6 characters long'
             });
         }
 
@@ -26,7 +50,9 @@ router.post('/signup', async (req, res) => {
         if (existingUser) {
             return res.status(400).json({
                 success: false,
-                message: 'User with this email or phone already exists'
+                message: existingUser.email === email 
+                    ? 'Email already registered' 
+                    : 'Phone number already registered'
             });
         }
 
@@ -47,6 +73,7 @@ router.post('/signup', async (req, res) => {
 
         res.status(201).json({
             success: true,
+            message: 'Account created successfully',
             token,
             user: {
                 id: user._id,
@@ -59,7 +86,7 @@ router.post('/signup', async (req, res) => {
         console.error('Signup error:', error);
         res.status(500).json({
             success: false,
-            message: 'Error creating account'
+            message: 'Error creating account. Please try again later.'
         });
     }
 });
@@ -102,7 +129,8 @@ router.post('/login', async (req, res) => {
                 name: user.name,
                 email: user.email,
                 phone: user.phone
-            }
+            },
+            message: 'Login successful'
         });
 
     } catch (error) {
