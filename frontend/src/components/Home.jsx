@@ -8,8 +8,8 @@ const Home = () => {
   // Featured products data with IDs matching your database
   const featuredProducts = [
     {
-      id: "your-flower-product-id", // Replace with actual product ID from database
-      image: "/images/crochet-flowers.jpg",
+      id: "67f8c7b79e3ab1a4ee56ff0a", // Replace with actual product ID from database
+      image: "/image/flower3.jpg",
       title: "Delicate Flower Collection",
       description: "Handmade crochet flowers for any occasion",
       category: "Flowers"
@@ -22,15 +22,15 @@ const Home = () => {
       category: "Keychain"
     },
     {
-      id: "your-bag-product-id", // Replace with actual product ID from database
-      image: "/images/crochet-bag.jpg",
+      id: "67f8c5979e3ab1a4ee56fef0", // Replace with actual product ID from database
+      image: "/image/bag2.jpg",
       title: "Stylish Bags",
       description: "Beautiful and practical crochet bags",
       category: "Bags"
     },
     {
-      id: "your-toys-product-id", // Replace with actual product ID from database
-      image: "/images/crochet-toys.jpg",
+      id: "67f8c6a69e3ab1a4ee56fefe", // Replace with actual product ID from database
+      image: "/image/toy.jpg",
       title: "Adorable Toys",
       description: "Handmade with love for little ones",
       category: "Toys"

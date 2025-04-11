@@ -9,6 +9,13 @@ const AboutUs = () => {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 500], [0, 200]);
 
+  const parallaxStyle = {
+    backgroundImage: `linear-gradient(rgba(255, 230, 240, 0.8), rgba(255, 182, 193, 0.8)), url('/image/bunch.jpg')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat'
+  };
+
   const fadeInUp = {
     initial: { opacity: 0, y: 60 },
     whileInView: { opacity: 1, y: 0 },
@@ -46,7 +53,7 @@ const AboutUs = () => {
       <div className="parallax-container">
         <motion.div 
           className="parallax-image"
-          style={{ y }}
+          style={{ ...parallaxStyle, y }}
         />
         <div className="parallax-content">
           <motion.div 

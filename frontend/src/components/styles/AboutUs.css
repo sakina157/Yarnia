@@ -15,8 +15,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #FFE6F0 0%, #FFB6C1 100%);
-  opacity: 0.8;
+  opacity: 1.3;
 }
 
 .parallax-content {
@@ -27,6 +26,16 @@
   justify-content: center;
   text-align: center;
   z-index: 2;
+}
+
+.about-hero-content {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1rem 1rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  max-width: 90%;
+  margin: 0 auto;
 }
 
 .about-hero-content h1 {
@@ -232,8 +241,17 @@
 .elem2 { top: 60%; right: 10%; }
 
 @media (max-width: 768px) {
+  .about-hero-content {
+    padding: 1.5rem 2rem;
+    margin: 0 1rem;
+  }
+  
   .about-hero-content h1 {
     font-size: 3rem;
+  }
+  
+  .about-hero-content p {
+    font-size: 1.5rem;
   }
   
   .founder-section {

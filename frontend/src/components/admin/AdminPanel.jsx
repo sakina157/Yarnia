@@ -181,32 +181,36 @@ const AdminPanel = () => {
             <div className="products-list">
                 {products.map(product => (
                     <div key={product._id} className="product-item">
-                        <div className="product-image">
-                            {product.images && product.images[0] ? (
-                                <img 
-                                    src={product.images[0]} 
-                                    alt={product.title}
-                                />
-                            ) : (
-                                <FaImage className="placeholder-image" />
-                            )}
-                        </div>
-                        <div className="product-details">
-                            <h3>{product.title}</h3>
-                            <p className="price">₹{product.price}</p>
-                            <p className="category">{product.category}</p>
-                            <p className="stock">Stock: {product.stock}</p>
+                        <div className="product-content">
+                            <div className="product-image">
+                                {product.images && product.images[0] ? (
+                                    <img 
+                                        src={product.images[0]} 
+                                        alt={product.title}
+                                    />
+                                ) : (
+                                    <FaImage className="placeholder-image" />
+                                )}
+                            </div>
+                            <div className="product-details">
+                                <h3>{product.title}</h3>
+                                <p className="price">₹{product.price}</p>
+                                <p className="category">{product.category}</p>
+                                <p className="stock">Stock: {product.stock}</p>
+                            </div>
                         </div>
                         <div className="product-actions">
                             <button 
                                 className="edit-btn" 
                                 onClick={() => handleEdit(product._id)}
+                                title="Edit product"
                             >
                                 <FaEdit />
                             </button>
                             <button 
                                 className="delete-btn"
                                 onClick={() => handleDelete(product._id)}
+                                title="Delete product"
                             >
                                 <FaTrash />
                             </button>
