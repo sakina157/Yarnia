@@ -77,17 +77,17 @@ const Home = () => {
 
       <section className="featured-products">
         <h2>Featured Creations</h2>
-        <div className="products-grid">
+        <div className="featured-products-grid">
           {featuredProducts.map((product, index) => (
             <div 
-              className="product-card" 
+              className="featured-product-card" 
               key={product.id}
               style={{ animationDelay: `${index * 0.2}s` }}
             >
-              <div className="product-image">
+              <div className="featured-product-image">
                 <img src={product.image} alt={product.title} />
               </div>
-              <div className="product-content">
+              <div className="featured-product-content">
                 <h3>{product.title}</h3>
                 <p>{product.description}</p>
                 <button 

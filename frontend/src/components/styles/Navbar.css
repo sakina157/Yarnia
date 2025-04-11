@@ -42,14 +42,30 @@
 
 .nav-link {
   text-decoration: none;
-  color: #000000;
+  color: #333333;
   font-size: 1.2rem;
-  font-weight: 500;
-  transition: color 0.3s ease;
+  font-weight: 600;
+  transition: color 0.2s ease;
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: #ff69b4;
+  transition: width 0.3s ease;
 }
 
 .nav-link:hover {
-  color: #ff1493;
+  color: #ff69b4;
+}
+
+.nav-link:hover::after {
+  width: 100%;
 }
 
 .navbar-right {
@@ -68,12 +84,12 @@
 
 .nav-icon {
   font-size: 1.3rem;
-  color: #000000;
+  color: #333333;
   transition: color 0.3s ease;
 }
 
 .nav-icon:hover {
-  color: #ff1493;
+  color: #ff69b4;
 }
 
 .user-icon-container {
@@ -84,13 +100,18 @@
   position: absolute;
   top: -8px;
   right: -8px;
-  background-color: #ff1493;
+  background-color: #ff69b4;
   color: white;
-  font-size: 0.8rem;
-  padding: 2px 6px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  padding: 2px 8px;
   border-radius: 50%;
-  min-width: 18px;
-  text-align: center;
+  min-width: 20px;
+  min-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .cart-icon-container {

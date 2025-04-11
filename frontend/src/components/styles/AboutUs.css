@@ -264,32 +264,37 @@
 }
 
 .reviews-container {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
-    flex-wrap: wrap;
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 2rem;
 }
 
 .review-box {
     background: white;
     padding: 2rem;
     border-radius: 20px;
-    width: 300px;
-    min-height: 200px;
+    min-height: 250px;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
     box-shadow: 0 4px 15px rgba(255, 105, 180, 0.1);
     border: 2px solid #FFE6F0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.review-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(255, 105, 180, 0.2);
 }
 
 .quote-icon {
     color: #FFB6C1;
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .review-text {
@@ -298,21 +303,18 @@
     line-height: 1.6;
     margin-bottom: 1.5rem;
     font-style: italic;
+    flex-grow: 1;
 }
 
 .stars {
     display: flex;
     gap: 0.25rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .star {
-    color: #ddd;
-    font-size: 1.2rem;
-}
-
-.star.filled {
     color: #FFD700;
+    font-size: 1.2rem;
 }
 
 .reviewer-name {
@@ -320,46 +322,26 @@
     color: #FF69B4;
     font-size: 1.1rem;
     margin-top: auto;
+    padding-top: 1rem;
+    border-top: 2px solid #FFE6F0;
+    width: 100%;
+    text-align: center;
 }
 
-/* Add floating hearts in the background */
-.customer-reviews::before,
-.customer-reviews::after {
-    content: '♥';
-    position: absolute;
-    font-size: 2rem;
-    color: #FFE6F0;
-    animation: float 6s infinite;
-    opacity: 0.5;
-}
-
-.customer-reviews::before {
-    top: 10%;
-    left: 5%;
-}
-
-.customer-reviews::after {
-    bottom: 10%;
-    right: 5%;
-}
-
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0) rotate(0deg);
-    }
-    50% {
-        transform: translateY(-20px) rotate(10deg);
+@media (max-width: 992px) {
+    .reviews-container {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 768px) {
     .reviews-container {
-        flex-direction: column;
-        align-items: center;
+        grid-template-columns: 1fr;
+        padding: 0 1rem;
     }
 
     .review-box {
-        width: 90%;
-        max-width: 300px;
+        width: 100%;
+        min-height: 200px;
     }
 }

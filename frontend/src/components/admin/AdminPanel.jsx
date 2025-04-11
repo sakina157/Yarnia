@@ -184,10 +184,7 @@ const AdminPanel = () => {
                         <div className="product-image">
                             {product.images && product.images[0] ? (
                                 <img 
-                                    src={product.images[0].startsWith('http') 
-                                        ? product.images[0] 
-                                        : `${process.env.REACT_APP_API_URL}${product.images[0]}`
-                                    } 
+                                    src={product.images[0]} 
                                     alt={product.title}
                                 />
                             ) : (

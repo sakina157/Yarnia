@@ -2,6 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './App.css';
+import './components/styles/responsive.css';  // Add responsive styles
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Shop from './components/Shop';
@@ -19,13 +21,12 @@ import { CartProvider } from './context/CartContext';
 import { SearchProvider } from './context/SearchContext';
 import SearchModal from './components/SearchModal';
 import ProductDetail from './components/ProductDetail';
+import Checkout from './components/Checkout';
+import OrderHistory from './components/OrderHistory';
 import axios from 'axios';
 
-
-import './App.css';
-
 axios.defaults.baseURL = process.env.REACT_APP_API_URL
-axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 // Add request interceptor
@@ -53,7 +54,6 @@ axios.interceptors.response.use(
   }
 );
 
-
 function App() {
   return (
     <Router>
@@ -80,6 +80,8 @@ function App() {
                 <Route path="/about" element={<AboutUs />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/orders" element={<OrderHistory />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/profile" element={<UserProfile />} />

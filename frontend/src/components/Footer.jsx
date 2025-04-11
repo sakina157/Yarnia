@@ -39,28 +39,28 @@ const Footer = () => {
 
         <div className="footer-section">
           <h3>Contact Us</h3>
-          <div className="contact-info">
+          <div className="footer-contact-info">
             <a href="tel:+917405707753">
-              <FaPhone className="contact-icon" />
+              <FaPhone className="footer-contact-icon" />
               +91 7405707753
             </a>
             <a href="mailto:morawalasakina932@gmail.com">
-              <FaEnvelope className="contact-icon" />
+              <FaEnvelope className="footer-contact-icon" />
               morawalasakina932@gmail.com
             </a>
           </div>
           
-          <div className="social-links">
+          <div className="footer-social-links">
             <h3>Follow Us</h3>
-            <div className="social-icons">
+            <div className="footer-social-icons">
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-                <FaInstagram className="social-icon" />
+                <FaInstagram className="footer-social-icon" />
               </a>
               <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer">
-                <FaPinterest className="social-icon" />
+                <FaPinterest className="footer-social-icon" />
               </a>
               <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-                <FaFacebook className="social-icon" />
+                <FaFacebook className="footer-social-icon" />
               </a>
             </div>
           </div>

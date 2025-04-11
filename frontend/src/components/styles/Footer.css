@@ -65,11 +65,11 @@
   color: #FF69B4;
 }
 
-.contact-info {
+.footer-contact-info {
   margin-bottom: 2rem;
 }
 
-.contact-info a {
+.footer-contact-info a {
   color: #666;
   text-decoration: none;
   font-size: 1rem;
@@ -80,34 +80,34 @@
   transition: color 0.3s ease;
 }
 
-.contact-info a:hover {
+.footer-contact-info a:hover {
   color: #FF69B4;
 }
 
-.contact-icon {
+.footer-contact-icon {
   color: #FF69B4;
   font-size: 1.2rem;
 }
 
-.social-links h3 {
+.footer-social-links h3 {
   color: #FF69B4;
   font-size: 1.3rem;
   margin-bottom: 1.2rem;
   font-weight: 500;
 }
 
-.social-icons {
+.footer-social-icons {
   display: flex;
   gap: 1.5rem;
 }
 
-.social-icon {
+.footer-social-icon {
   color: #666;
   font-size: 1.5rem;
   transition: color 0.3s ease;
 }
 
-.social-icon:hover {
+.footer-social-icon:hover {
   color: #FF69B4;
 }
 
@@ -147,11 +147,11 @@
     justify-content: center;
   }
 
-  .contact-info a {
+  .footer-contact-info a {
     justify-content: center;
   }
 
-  .social-icons {
+  .footer-social-icons {
     justify-content: center;
   }
 } 

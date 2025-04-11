@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaTimes, FaEnvelope, FaLock } from 'react-icons/fa';
+import { FaTimes, FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Signup } from './Signup';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -9,6 +9,7 @@ import './styles/Auth.css';
 export const Login = ({ isOpen, onClose }) => {
   const { login } = useAuth();
   const [showSignup, setShowSignup] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -100,13 +101,20 @@ export const Login = ({ isOpen, onClose }) => {
           <div className="input-icon">
             <FaLock className="icon" />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               placeholder="Password"
               value={formData.password}
               onChange={handleChange}
               required
             />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEye /> : <FaEyeSlash />}
+            </button>
           </div>
         </div>
 

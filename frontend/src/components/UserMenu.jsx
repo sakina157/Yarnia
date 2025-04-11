@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaUser, FaCog, FaSignOutAlt } from 'react-icons/fa';
+import { FaUser, FaCog, FaSignOutAlt, FaShoppingBag } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import './styles/UserMenu.css';
 
@@ -53,6 +53,10 @@ const UserMenu = ({ onClose }) => {
           <FaUser className="menu-icon" />
           My Profile
         </div>
+        <Link to="/orders" className="menu-item" onClick={onClose}>
+          <FaShoppingBag className="menu-icon" />
+          My Orders
+        </Link>
         <div className="menu-item" onClick={() => handleProfileClick('security')}>
           <FaCog className="menu-icon" />
           Settings

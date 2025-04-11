@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaTimes, FaEnvelope, FaLock, FaPhone } from 'react-icons/fa';
+import { FaTimes, FaEnvelope, FaLock, FaPhone, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate, useLocation, Link} from 'react-router-dom';
 import { api } from '../services/api';
 import './styles/Auth.css';
@@ -12,6 +12,8 @@ export const Signup = ({ isOpen, onClose, onBackToLogin }) => {
     confirmPassword: '',
     acceptedTerms: false 
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -115,13 +117,20 @@ export const Signup = ({ isOpen, onClose, onBackToLogin }) => {
           <div className="input-icon">
             <FaLock className="icon" />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               placeholder="Password"
               value={formData.password}
               onChange={handleChange}
               required
             />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEye /> : <FaEyeSlash />}
+            </button>
           </div>
         </div>
 
@@ -129,13 +138,20 @@ export const Signup = ({ isOpen, onClose, onBackToLogin }) => {
           <div className="input-icon">
             <FaLock className="icon" />
             <input
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               name="confirmPassword"
               placeholder="Confirm Password"
               value={formData.confirmPassword}
               onChange={handleChange}
               required
             />
+            <button
+              type="button"
+              className="password-toggle"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
+            </button>
           </div>
         </div>
 

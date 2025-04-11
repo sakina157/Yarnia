@@ -1,0 +1,153 @@
+/* Common Breakpoints */
+:root {
+  --mobile-sm: 320px;
+  --mobile: 480px;
+  --tablet: 768px;
+  --desktop-sm: 1024px;
+  --desktop: 1200px;
+}
+
+/* Responsive Container */
+.container {
+  width: 100%;
+  max-width: var(--desktop);
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  h1 {
+    font-size: calc(2rem + 1vw) !important;
+  }
+  h2 {
+    font-size: calc(1.5rem + 1vw) !important;
+  }
+  h3 {
+    font-size: calc(1.2rem + 1vw) !important;
+  }
+  p {
+    font-size: calc(0.9rem + 0.5vw) !important;
+  }
+}
+
+/* Responsive Grid */
+.grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/* Responsive Padding */
+@media (max-width: 768px) {
+  .section-padding {
+    padding: 2rem 1rem !important;
+  }
+}
+
+/* Responsive Images */
+.responsive-img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Responsive Flex */
+.flex-responsive {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Hide elements on mobile */
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+/* Hide elements on tablet */
+@media (max-width: 1024px) {
+  .hide-tablet {
+    display: none !important;
+  }
+}
+
+/* Stack elements on mobile */
+@media (max-width: 768px) {
+  .stack-mobile {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  
+  .stack-mobile > * {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+/* Responsive Margins */
+@media (max-width: 768px) {
+  .margin-responsive {
+    margin: 1rem !important;
+  }
+}
+
+/* Responsive Buttons */
+@media (max-width: 768px) {
+  .btn-responsive {
+    width: 100% !important;
+    padding: 0.8rem !important;
+    font-size: 1rem !important;
+  }
+}
+
+/* Responsive Forms */
+@media (max-width: 768px) {
+  .form-responsive input,
+  .form-responsive textarea,
+  .form-responsive select {
+    width: 100% !important;
+    margin-bottom: 1rem !important;
+  }
+}
+
+/* Responsive Tables */
+@media (max-width: 768px) {
+  .table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Responsive Navigation */
+@media (max-width: 768px) {
+  .nav-responsive {
+    flex-direction: column !important;
+    align-items: center !important;
+    padding: 1rem !important;
+  }
+  
+  .nav-responsive > * {
+    margin: 0.5rem 0 !important;
+  }
+}
+
+/* Responsive Cards */
+@media (max-width: 768px) {
+  .card-responsive {
+    width: 100% !important;
+    margin: 0.5rem 0 !important;
+  }
+}
+
+/* Responsive Modals */
+@media (max-width: 768px) {
+  .modal-responsive {
+    width: 95% !important;
+    margin: 1rem !important;
+    padding: 1rem !important;
+  }
+} 

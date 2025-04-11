@@ -1,11 +1,13 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
 import { FaTrash, FaMinus, FaPlus, FaImage } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import './styles/Cart.css';
 import { getImageUrl } from '../utils/imageUtils';
 
 const Cart = () => {
     const { cart, updateQuantity, removeFromCart, loading } = useCart();
+    const navigate = useNavigate();
 
     const handleQuantityUpdate = async (productId, newQuantity) => {
         try {
@@ -31,6 +33,10 @@ const Cart = () => {
         } catch (error) {
             console.error('Error in handleRemoveItem:', error);
         }
+    };
+
+    const handleCheckout = () => {
+        navigate('/checkout');
     };
 
     if (!cart?.items?.length) {
@@ -101,7 +107,7 @@ const Cart = () => {
                         <span>Subtotal:</span>
                         <span>₹{cart.total || 0}</span>
                     </div>
-                    <button className="checkout-btn">Proceed to Checkout</button>
+                    <button className="checkout-btn" onClick={handleCheckout}>Proceed to Checkout</button>
                 </div>
             </div>
         </div>

@@ -81,19 +81,22 @@
     color: #333;
     font-size: 2rem;
     margin: 0;
+    padding-right: 60px;
 }
 
-.category {
+.product-category {
     color: #FF69B4;
     text-transform: uppercase;
     font-size: 0.9rem;
     letter-spacing: 1px;
+    margin-bottom: 1rem;
 }
 
-.price {
+.product-price {
     font-size: 2rem;
     color: #333;
     font-weight: 600;
+    margin-bottom: 1rem;
 }
 
 .stock-status {
@@ -595,27 +598,35 @@
 
 .add-to-cart {
     position: absolute;
-    right: 1rem;
     top: 1rem;
-    background: #FF69B4;
-    color: white;
-    border: none;
-    width: 40px;
-    height: 40px;
+    right: 1rem;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
+    background: #FF69B4;
+    border: none;
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(255, 105, 180, 0.3);
 }
 
 .add-to-cart:hover:not(:disabled) {
     background: #FF1493;
     transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(255, 105, 180, 0.4);
 }
 
 .add-to-cart:disabled {
     background: #ccc;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.add-to-cart svg {
+    font-size: 1.2rem;
 } 
